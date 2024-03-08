@@ -1,11 +1,35 @@
-import PropertyListItem from "./PropertyListItems";
+'use client';
 
-const PropertyList = ()=>{
+import { useEffect,useState } from "react";
+import PropertyListItem from "./PropertyListItems";
+import apiService from "@/app/services/apiService";
+
+export type PropertyType = {
+  id: string;
+  title: string;
+  image_url: string;
+  price_per_night: number
+}
+
+const PropertyList = () => {
+  const [properties, setProperties] = useState<PropertyType[]>([]);
+  const getProperties = async () => {
+    const tmp_properties = await apiService.get('/api/properties');
+    setProperties(tmp_properties.data)
+  };
+  useEffect(()=> {
+    getProperties();
+  }, []);
   return (
     <>
-      <PropertyListItem/>
-      <PropertyListItem/>
-      <PropertyListItem/>
+      {properties.map((property) => {
+        return(
+          <PropertyListItem
+            key={property.id}
+            property={property}
+          />
+        )
+      })}
     </>
   )
 }
