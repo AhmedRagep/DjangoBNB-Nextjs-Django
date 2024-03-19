@@ -3,7 +3,17 @@ import { useState } from "react";
 import MenuLink from "./MenuLink";
 import useLoginModal from "@/app/hooks/useLoginModal";
 import useSignupModal from "@/app/hooks/useSignUpModal";
-const UserNav = () => {
+import LogoutButton from "../LogoutButton";
+
+// لتعريف الرقم علي انه كلام او فارغ
+interface UserNavProps{
+  userId?: string | null
+}
+
+// يتم استخدام التعريف السابق لاضافة الايدي
+const UserNav: React.FC<UserNavProps> = ({
+  userId
+}) => {
   const LoginModal = useLoginModal()
   const signUpModal = useSignupModal()
   const [isOpen, setIsOpen] = useState(false)
@@ -23,21 +33,31 @@ const UserNav = () => {
 
       {isOpen && (
         <div className="w-[220px] absolute top-[60px] right-0 bg-white border rounded-xl shadow-md flex flex-col cursor-pointer">
-          <MenuLink
-            label='Log in'
-            onClick={() => {
-              console.log('clicked')
-              setIsOpen(false)
-              LoginModal.open()
-            }}
-          />
-          <MenuLink
-            label='Sign up'
-            onClick={() => {
-              console.log('clicked')
-              setIsOpen(false)
-              signUpModal.open()}}
-          />
+          {/* اذا كان اليوزر مسجل دخول */}
+          {userId ? (
+              <LogoutButton/>
+            ) : 
+            // لو كان مش مسجل
+            (
+              <>
+                <MenuLink
+                  label='Log in'
+                  onClick={() => {
+                    console.log('clicked')
+                    setIsOpen(false)
+                    LoginModal.open()
+                  }}
+                />
+                <MenuLink
+                  label='Sign up'
+                  onClick={() => {
+                    console.log('clicked')
+                    setIsOpen(false)
+                    signUpModal.open()}}
+                />    
+              </>
+            )
+          }
         </div>
       )}
     </div>
